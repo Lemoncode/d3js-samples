@@ -16,6 +16,7 @@ setupCanvasSize();
 appendSvg("body");
 setupXScale();
 setupYScale();
+appendXAxis();
 
 // 1. let's start by selecting the SVG Node
 function setupCanvasSize() {
@@ -62,6 +63,13 @@ function setupYScale()
     }));
 }
 
+function appendXAxis() {
+  // Add the X Axis
+  svg.append("g")
+    .attr("transform", "translate(0,"+ height +")")
+    .call(d3.axisBottom(x));
+}
+
 // 2. Now let's select all the rectangles inside that svg
 // (right now is empty)
 var rects = svg.selectAll('rect')
@@ -90,10 +98,6 @@ newRects.append('rect')
     return x(d.sales);
   });
 
-  // Add the X Axis
-  svg.append("g")
-    .attr("transform", "translate(0,"+ height +")")
-    .call(d3.axisBottom(x));
 
   // Add the Y Axis
   svg.append("g")
