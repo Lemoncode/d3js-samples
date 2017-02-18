@@ -10,9 +10,11 @@ let margin = null,
     height = null;
 
 let svg = null;
+let x = null; // scales
 
 setupCanvasSize();
 appendSvg("body");
+setupXScale();
 
 // 1. let's start by selecting the SVG Node
 function setupCanvasSize() {
@@ -31,10 +33,17 @@ function appendSvg(domElement) {
               ;
 }
 
+function setupXScale()
+{
+  var maxSales = d3.max(totalSales, function(d, i) {
+    return d.sales;
+  });
 
-//var barChartsGroup = svg.append("g");
+  x = d3.scaleLinear()
+    .range([0, 350])
+    .domain([0, maxSales]);
 
-//barChartsGroup.attr("transform", "translate(" + margin.left + ",0)");
+}
 
 // 2. Now let's select all the rectangles inside that svg
 // (right now is empty)
@@ -46,18 +55,18 @@ var rects = svg.selectAll('rect')
 // on the bar chart, we need to know the max sales value we are going
 // to show.
 
-var maxSales = d3.max(totalSales, function(d, i) {
-  return d.sales;
-});
+// var maxSales = d3.max(totalSales, function(d, i) {
+//   return d.sales;
+// });
 
 // Now on the X axis we want to map totalSales values to
 // pixels
 // in this case we map the canvas range 0..350, to 0...maxSales
 // domain == data (data from 0 to maxSales) boundaries
 // ** Tip: let's play with [0, 350] values
-var x = d3.scaleLinear()
-  .range([0, 350])
-  .domain([0, maxSales]);
+// var x = d3.scaleLinear()
+//   .range([0, 350])
+//   .domain([0, maxSales]);
 
 // Now we don't have a linear range of values, we have a discrete
 // range of values (one per product)
