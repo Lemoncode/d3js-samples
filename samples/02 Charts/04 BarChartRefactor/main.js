@@ -17,6 +17,8 @@ appendSvg("body");
 setupXScale();
 setupYScale();
 appendXAxis();
+appendYAxis();
+appendChartBars();
 
 // 1. let's start by selecting the SVG Node
 function setupCanvasSize() {
@@ -70,35 +72,38 @@ function appendXAxis() {
     .call(d3.axisBottom(x));
 }
 
-// 2. Now let's select all the rectangles inside that svg
-// (right now is empty)
-var rects = svg.selectAll('rect')
-  .data(totalSales);
-
-
-// Now it's time to append to the list of Rectangles we already have
-var newRects = rects.enter();
-
-// Let's append a new Rectangles
-// UpperCorner:
-//    Starting x position, the start from the axis
-//    Starting y position, where the product starts on the y scale
-// React width and height:
-//    height: the space assign for each entry (product) on the Y axis
-//    width: Now that we have the mapping previously done (linear)
-//           we just pass the sales and use the X axis conversion to
-//           get the right value
-newRects.append('rect')
-  .attr('x', x(0))
-  .attr('y', function(d, i) {
-    return y(d.product);
-  })
-  .attr('height', y.bandwidth)
-  .attr('width', function(d, i) {
-    return x(d.sales);
-  });
-
-
+function appendYAxis() {
   // Add the Y Axis
   svg.append("g")
   .call(d3.axisLeft(y));
+}
+
+function appendChartBars()
+{
+  // 2. Now let's select all the rectangles inside that svg
+  // (right now is empty)
+  var rects = svg.selectAll('rect')
+    .data(totalSales);
+
+    // Now it's time to append to the list of Rectangles we already have
+    var newRects = rects.enter();
+
+    // Let's append a new Rectangles
+    // UpperCorner:
+    //    Starting x position, the start from the axis
+    //    Starting y position, where the product starts on the y scale
+    // React width and height:
+    //    height: the space assign for each entry (product) on the Y axis
+    //    width: Now that we have the mapping previously done (linear)
+    //           we just pass the sales and use the X axis conversion to
+    //           get the right value
+    newRects.append('rect')
+      .attr('x', x(0))
+      .attr('y', function(d, i) {
+        return y(d.product);
+      })
+      .attr('height', y.bandwidth)
+      .attr('width', function(d, i) {
+        return x(d.sales);
+      });
+}
