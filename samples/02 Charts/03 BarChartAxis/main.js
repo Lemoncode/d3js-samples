@@ -6,9 +6,13 @@ var totalSales = [
 
 
 // 1. let's start by selecting the SVG Node
-var margin = {top: 0, left: 80, bottom: 0, right: 0}
+var margin = {top: 0, left: 80, bottom: 0, right: 0};
+var width = 960 - margin.left - margin.right;
+var height = 500 - margin.top - margin.bottom;
 
-var svg = d3.select('svg');
+var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
 
 var barChartsGroup = svg.append("g");
 
