@@ -5,26 +5,40 @@
 
 // Isolated data array to a different file
 
+let margin = null,
+    width = null,
+    height = null;
+
+let svg = null;
+
+setupCanvasSize();
+appendSvg("body");
+
 // 1. let's start by selecting the SVG Node
-var margin = {top: 0, left: 80, bottom: 20, right: 0};
-var width = 960 - margin.left - margin.right;
-var height = 120 - margin.top - margin.bottom;
+function setupCanvasSize() {
+  margin = {top: 0, left: 80, bottom: 20, right: 0};
+  width = 960 - margin.left - margin.right;
+  height = 120 - margin.top - margin.bottom;
+}
 
-var svg = d3.select("body").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-            ;
+function appendSvg(domElement) {
+  svg = d3.select(domElement).append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+              ;
+}
 
-var barChartsGroup = svg.append("g");
+
+//var barChartsGroup = svg.append("g");
 
 //barChartsGroup.attr("transform", "translate(" + margin.left + ",0)");
 
 // 2. Now let's select all the rectangles inside that svg
 // (right now is empty)
-var rects = barChartsGroup.selectAll('rect')
+var rects = svg.selectAll('rect')
   .data(totalSales);
 
 
