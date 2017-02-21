@@ -61,3 +61,111 @@ newRects.append('rect')
 +    return barColor(d.product);
 +  });
 ```
+
+3) Let's rotate 90º the bar chart, we want it to show it like:
+
+![Vertical](./pictures/02_vertical.png "Chart Vertical")
+
+First let's swap X Scale and Y Scale
+
+
+```javascript
+
+let margin = null,
+    width = null,
+    height = null;
+
+let svg = null;
+let x, y = null; // scales
+
+setupCanvasSize();
+appendSvg("body");
+setupXScale();
+setupYScale();
+appendXAxis();
+appendYAxis();
+appendChartBars();
+
+// 1. let's start by selecting the SVG Node
+function setupCanvasSize() {
+  margin = {top: 100, left: 180, bottom: 120, right: 130};
+  width = 960 - margin.left - margin.right;
+  height = 800 - margin.top - margin.bottom;
+}
+
+function appendSvg(domElement) {
+  svg = d3.select(domElement).append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+              ;
+}
+
+
+function setupXScale()
+{
+  x = d3.scaleBand()
+    .rangeRound([0, width])
+    .domain(totalSales.map(function(d, i) {
+      return d.product;
+    }));
+
+}
+
+function setupYScale()
+{
+  var maxSales = d3.max(totalSales, function(d, i) {
+    return d.sales;
+  });
+
+  y = d3.scaleLinear()
+    .range([height,0])
+    .domain([0, maxSales]);    
+}
+
+function appendXAxis() {
+  // Add the X Axis
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+}
+
+function appendYAxis() {
+  //   
+  // Add the Y Axis
+  svg.append("g")   
+ 
+  .call(d3.axisLeft(y));
+}
+
+function appendChartBars()
+{
+  // 2. Now let's select all the rectangles inside that svg
+  // (right now is empty)
+  var rects = svg.selectAll('rect')
+    .data(totalSales);
+
+    // Now it's time to append to the list of Rectangles we already have
+    var newRects = rects.enter();
+
+
+    newRects.append('rect')
+      .attr('x', function(d, i) {
+        return x(d.product);
+      })
+      .attr('y', function(d) { 
+        return y(d.sales); 
+      })     
+      .attr('height', function(d, i) {
+        return height - y(d.sales);
+      })
+      .attr('width', x.bandwidth)      
+      ;
+      
+}
+```
+
+**There's a second solution that you can try... what about keeping the chart 
+as it was original and just rotate it?**

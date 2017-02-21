@@ -25,4 +25,11 @@ and invoke the color function we have previously created.
 
 3) Let's rotate 90º the bar chart, we want it to show it like:
 
+![Vertical](./pictures/02_vertical.png "Chart Vertical")
+
+If you need some help, a similar sample can be found: 
+
+[Blocks Sample](http://bl.ocks.org/d3noob/8952219) 
+
+
 
