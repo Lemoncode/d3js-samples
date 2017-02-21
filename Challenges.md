@@ -22,3 +22,7 @@ var barColor = d3.scaleOrdinal(d3.schemeCategory10);
 The React it self has an attribute called filled, we can
 attach to it a _function(d)_ extract from it the current product
 and invoke the color function we have previously created.
+
+3) Let's rotate 90º the bar chart, we want it to show it like:
+
+
