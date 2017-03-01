@@ -46,5 +46,43 @@ a set of expenses.
 
 5) Make the pie chart scale and take all the available canvas space, plus include margin for legend.
 
+```diff
+function setupCanvasSize() {
+  margin = {top: 0, left: 80, bottom: 20, right: 30};
++  width = 760 - margin.left - margin.right;
++  height = 660 - margin.top - margin.bottom;
+}
 
+function appendPieChart()
+{
+  // Where to get the measure data
+  var pie = d3.pie()
+    .value(function(d) { return d.sales })
+
+  // Calculate Arcs
+  var slices = pie(totalSales);
+
+  // Pie chart size
+  var arc = d3.arc()
+    .innerRadius(0)
++    .outerRadius(height / 2);
+
++  var positionX = width / 2;
++  var positionY = height / 2;
+
+  // Draw the pie
+  svg.selectAll('path.slice')
+    .data(slices)
+      .enter()        
+        .append('path')
+          .attr('class', 'slice')
+          .attr('d', arc)
+          .attr('fill', function(d) {
+            return color(d.data.product);
+          })
++          .attr("transform", `translate(${positionX}, ${positionY})`)
+          ;
+}
+
+```
 
