@@ -175,14 +175,28 @@ as it was original and just rotate it?**
 4) Add one more line to the chart, this line will represent
 a set of expenses.
 
+![TwoLines](./pictures/03_twolines.png "Two lines")
+
 Let's start by adding a new style for the new line (styles.css)
 
-```
+```css
+.lineB {
+fill: none;
+stroke: red;
+stroke-width: 2px;
+}
 ```
 
 We will add a new line of data
 
-```
+```javascript
+var totalExpenses = [
+{ month: new Date(2016,10, 01), sales: 3500 },
+{ month: new Date(2016,11, 01), sales: 2400 },
+{ month: new Date(2016,12, 01), sales: 1500 },
+{ month: new Date(2017,1, 01), sales: 6000 },
+{ month: new Date(2017,2, 01), sales: 4500 },
+];
 ```
 
 > For the sake of simplicity we will keep the same dates (as an additional excercise, what should
@@ -190,5 +204,20 @@ you take care if we have different date ranges? we should combine min and max fo
 
 Next step let's add the new line
 
+```javascript
+function appendLineCharts()
+{
+  // (...)
+  var expenseline = d3.line()
+                    .x(function(d) { return x(d.month); })
+                    .y(function(d) { return y(d.expense); });
+
+  // Add the valueline path.
+  svg.append("path")
+  .data([totalExpenses])
+  .attr("class", "lineB")
+  .attr("d", expenseline);
+}
 ```
-```
+
+

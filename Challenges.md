@@ -36,5 +36,6 @@ If you need some help, a similar sample can be found:
 4) Add one more line to the chart, this line will represent
 a set of expenses.
 
+![TwoLines](./pictures/03_twolines.png "Two lines")
 
 
