@@ -38,4 +38,13 @@ a set of expenses.
 
 ![TwoLines](./pictures/03_twolines.png "Two lines")
 
+# 02 Charts / 06 Pie
+
+4) Create a Doughnut like chart.
+
+![Doughnut](./pictures/06_pie.png "Doughnut")
+
+5) Make the pie chart scale and take all the available canvas space, plus include margin for legend.
+
+
 

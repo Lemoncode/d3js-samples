@@ -220,4 +220,17 @@ function appendLineCharts()
 }
 ```
 
+# 02 Charts / 06 Pie
 
+4) Create a Doughnut like chart.
+
+![Doughnut](./pictures/06_pie.png "Doughnut")
+
+You only need to play with the innerRadius property:
+
+```javascript
+  // Pie chart size
+  var arc = d3.arc()
+    .innerRadius(20)
+    .outerRadius(50);
+```
