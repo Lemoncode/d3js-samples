@@ -31,5 +31,10 @@ If you need some help, a similar sample can be found:
 
 [Blocks Sample](http://bl.ocks.org/d3noob/8952219) 
 
+# 02 Charts / 05 Lines
+
+4) Add one more line to the chart, this line will represent
+a set of expenses.
+
 
 

@@ -169,3 +169,26 @@ function appendChartBars()
 
 **There's a second solution that you can try... what about keeping the chart 
 as it was original and just rotate it?**
+
+# 02 Charts / 05 Lines
+
+4) Add one more line to the chart, this line will represent
+a set of expenses.
+
+Let's start by adding a new style for the new line (styles.css)
+
+```
+```
+
+We will add a new line of data
+
+```
+```
+
+> For the sake of simplicity we will keep the same dates (as an additional excercise, what should
+you take care if we have different date ranges? we should combine min and max for the X timeline).
+
+Next step let's add the new line
+
+```
+```
