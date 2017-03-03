@@ -29,7 +29,7 @@ Some tips:
 
 - We can treat product category as an ordinal.
 
-- We can create a function that returns a color based on 
+- We can create a function that returns a color based on
 an existing d3 SchemeCategory
 
 ```javascript
@@ -136,7 +136,7 @@ function appendYAxis() {
   //   
   // Add the Y Axis
   svg.append("g")   
- 
+
   .call(d3.axisLeft(y));
 }
 
@@ -155,19 +155,19 @@ function appendChartBars()
       .attr('x', function(d, i) {
         return x(d.product);
       })
-      .attr('y', function(d) { 
-        return y(d.sales); 
+      .attr('y', function(d) {
+        return y(d.sales);
       })     
       .attr('height', function(d, i) {
         return height - y(d.sales);
       })
       .attr('width', x.bandwidth)      
       ;
-      
+
 }
 ```
 
-**There's a second solution that you can try... what about keeping the chart 
+**There's a second solution that you can try... what about keeping the chart
 as it was original and just rotate it?**
 
 # 02 Charts / 05 Lines
@@ -233,4 +233,46 @@ You only need to play with the innerRadius property:
   var arc = d3.arc()
     .innerRadius(20)
     .outerRadius(50);
+```
+
+5) Make the pie chart scale and take all the available canvas space, plus include margin for legend.
+
+```diff
+function setupCanvasSize() {
+  margin = {top: 0, left: 80, bottom: 20, right: 30};
++  width = 760 - margin.left - margin.right;
++  height = 660 - margin.top - margin.bottom;
+}
+
+function appendPieChart()
+{
+  // Where to get the measure data
+  var pie = d3.pie()
+    .value(function(d) { return d.sales })
+
+  // Calculate Arcs
+  var slices = pie(totalSales);
+
+  // Pie chart size
+  var arc = d3.arc()
+    .innerRadius(0)
++    .outerRadius(height / 2);
+
++  var positionX = width / 2;
++  var positionY = height / 2;
+
+  // Draw the pie
+  svg.selectAll('path.slice')
+    .data(slices)
+      .enter()        
+        .append('path')
+          .attr('class', 'slice')
+          .attr('d', arc)
+          .attr('fill', function(d) {
+            return color(d.data.product);
+          })
++          .attr("transform", `translate(${positionX}, ${positionY})`)
+          ;
+}
+
 ```
