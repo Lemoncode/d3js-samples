@@ -1,6 +1,6 @@
 /**
  * DISCLAIMER: Yes, you may think, why did this guy implement a parser from
- * scratch when D3 ships a wide variety of parsers? Well, the answer is very
+ * scratch when D3 ships wide variety of parsers? Well, the answer is very
  * straightforward: I did not realize until I had the parser finished.
  * TIP: Read documentation before start coding :) Check d3-dsv documentation
  * https://github.com/d3/d3-dsv
