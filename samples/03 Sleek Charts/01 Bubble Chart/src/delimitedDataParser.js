@@ -28,7 +28,7 @@ function parseDataToHtmlTable(data, fieldNames) {
     return headerAcc + "<th>" + currHeader + "</th>";
   }, "") + "<tr>" + data.reduce((recordAcc, currentRecord) => {
     return recordAcc + "<tr>" + Object.values(currentRecord).reduce((itemAcc, value) => {
-      return itemAcc + "<td>" + value + "</td>";
+      return itemAcc + "<td>" + value.toLocaleString() + "</td>";
     }, "") + "</tr>";
   }, "") + "</table>";
 }
