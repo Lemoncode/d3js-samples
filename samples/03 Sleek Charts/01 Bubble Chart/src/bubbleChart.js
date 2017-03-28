@@ -22,7 +22,7 @@ let bubbleClassScale = null;
 const marginRel = {
   top: 6,
   right: 6,
-  bottom: 8,
+  bottom: 10,
   left: 8
 };
 
@@ -42,6 +42,11 @@ let marginAbs = {
 let widthAbs = null;
 let heightAbs = null;
 
+/**
+ * Helper Functions
+ * @private
+ */
+
 function updateAbsoluteSize() {
   widthAbs = parseInt(svg.style("width"), 10);
   heightAbs = parseInt(svg.style("height"), 10);
@@ -52,6 +57,19 @@ function updateAbsoluteSize() {
   widthAbs = widthAbs - marginAbs.left - marginAbs.right;
   heightAbs = heightAbs - marginAbs.top - marginAbs.bottom;
 }
+
+function addPaddingToScale(scale, marginPercentage) {
+  const span = scale.range()[1] - scale.range()[0];
+  const rangeMargin = span * marginPercentage / 100;
+  const newDomainMin = scale.invert(scale.range()[0] - rangeMargin);
+  const newDomainMax = scale.invert(scale.range()[1] + rangeMargin);
+  scale.domain([newDomainMin, newDomainMax]);
+}
+
+/**
+ * Initialization Functions
+ * @private
+ */
 
 function initializeSvg() {
   svg = d3.select(`#${htmlId}`)
@@ -72,12 +90,13 @@ function initializeScales() {
   xScale = d3.scaleLog().base(10).nice()
     .domain(d3.extent(data, (d) => d.purchasingPower))
     .range([0, widthAbs]);
-
+  addPaddingToScale(xScale, 8);
 
   // y Scale - Represents life expectancy. Linear.
   yScale = d3.scaleLinear().nice()
     .domain(d3.extent(data, (d) => d.lifeExpectancy))
     .range([heightAbs, 0]);
+  addPaddingToScale(yScale, 5)
 
   // Bubble Area Scale - Represents population.
   // We want area of the circle to be scaled, however, we have radius
@@ -105,13 +124,15 @@ function initializeAxis() {
   // X axis - Purchasing Power.
   svg.append("g")
     .attr("transform", `translate(0,${heightAbs})`)
-    .call(d3.axisBottom(xScale).ticks(10, "$.2s"));
+    .call(d3.axisBottom(xScale)
+            .ticks(12, "$.2s")
+            .tickSizeOuter(0));
 
   // Y axis - Life Expectancy.
   svg.append("g")
-    .call(d3.axisLeft(yScale));
+    .call(d3.axisLeft(yScale)
+            .tickSizeOuter(0));
 }
-
 
 function initializeSelection() {
   svg.selectAll("circle")
