@@ -1,7 +1,6 @@
 const d3 = require("d3");
 import cssNames from "./bubbleChart.scss";
 
-
 /**
  * Module local variables.
  * @private
@@ -11,6 +10,7 @@ import cssNames from "./bubbleChart.scss";
 let data = null;
 let htmlId = null;
 let svg = null;
+let bubbleSelection = null;
 
 // Chart scales.
 let xScale = null;
@@ -18,29 +18,24 @@ let yScale = null;
 let bubbleAreaScale = null;
 let bubbleClassScale = null;
 
-// Margins in relative units.
-const marginRel = {
-  top: 6,
-  right: 6,
-  bottom: 10,
-  left: 8
-};
-
-// Width and Height with margins in relative units.
+// Width and Height in relative units.
 const widthRel = "80vw";
 const heightRel = "80vh";
 
-// Margins in absolute units.
-let marginAbs = {
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0
+// Chart Padding in relative units (%).
+const paddingRel = {
+  top: 6,
+  right: 6,
+  bottom: 12,
+  left: 8
 };
 
-// Width and Height without margins in absolute units.
-let widthAbs = null;
-let heightAbs = null;
+// Padding in absolute units.
+let paddingAbs = {};
+
+// Width and Height minus padding in absolute units.
+let innerWidthAbs = null;
+let innerHeightAbs = null;
 
 /**
  * Helper Functions
@@ -48,14 +43,14 @@ let heightAbs = null;
  */
 
 function updateAbsoluteSize() {
-  widthAbs = parseInt(svg.style("width"), 10);
-  heightAbs = parseInt(svg.style("height"), 10);
-  marginAbs.top = Math.round(marginRel.top * heightAbs / 100);
-  marginAbs.right = Math.round(marginRel.right * widthAbs / 100);
-  marginAbs.bottom = Math.round(marginRel.bottom * heightAbs / 100);
-  marginAbs.left = Math.round(marginRel.left * widthAbs / 100);
-  widthAbs = widthAbs - marginAbs.left - marginAbs.right;
-  heightAbs = heightAbs - marginAbs.top - marginAbs.bottom;
+  const widthAbs = parseInt(svg.style("width"), 10);
+  const heightAbs = parseInt(svg.style("height"), 10);
+  paddingAbs.top = Math.round(paddingRel.top * heightAbs / 100);
+  paddingAbs.right = Math.round(paddingRel.right * widthAbs / 100);
+  paddingAbs.bottom = Math.round(paddingRel.bottom * heightAbs / 100);
+  paddingAbs.left = Math.round(paddingRel.left * widthAbs / 100);
+  innerWidthAbs = widthAbs - paddingAbs.left - paddingAbs.right;
+  innerHeightAbs = heightAbs - paddingAbs.top - paddingAbs.bottom;
 }
 
 function addPaddingToScale(scale, marginPercentage) {
@@ -78,25 +73,24 @@ function initializeSvg() {
     .attr("height", heightRel);
   updateAbsoluteSize();
   svg = svg.append("g")
-    .attr("transform", `translate(${marginAbs.left},${marginAbs.top})`);
+    .attr("transform", `translate(${paddingAbs.left},${paddingAbs.top})`);
 }
 
 function initializeScales() {
-
   // x Scale - Represents purchasing power.
   // It will better fit in log base 10. Countries will be scattered
   // in a nicer way, given that rich vs poor countries may difference
   // in several orders of magnitude.
   xScale = d3.scaleLog().base(10).nice()
     .domain(d3.extent(data, (d) => d.purchasingPower))
-    .range([0, widthAbs]);
+    .range([0, innerWidthAbs]);
   addPaddingToScale(xScale, 8);
 
   // y Scale - Represents life expectancy. Linear.
   yScale = d3.scaleLinear().nice()
     .domain(d3.extent(data, (d) => d.lifeExpectancy))
-    .range([heightAbs, 0]);
-  addPaddingToScale(yScale, 5)
+    .range([innerHeightAbs, 0]);
+  addPaddingToScale(yScale, 5);
 
   // Bubble Area Scale - Represents population.
   // We want area of the circle to be scaled, however, we have radius
@@ -123,19 +117,35 @@ function initializeScales() {
 function initializeAxis() {
   // X axis - Purchasing Power.
   svg.append("g")
-    .attr("transform", `translate(0,${heightAbs})`)
+    .attr("class", cssNames.axis)
+    .attr("transform", `translate(0,${innerHeightAbs})`)
     .call(d3.axisBottom(xScale)
             .ticks(12, "$.2s")
             .tickSizeOuter(0));
 
+  // X axis - Label
+  svg.append("text")
+    .attr("class", cssNames.axisLabel)
+    .attr("text-anchor", "middle")
+    .attr("transform", `translate(${innerWidthAbs / 2},${innerHeightAbs + paddingAbs.bottom * 0.85})`)
+    .text("Purchasing Power ($US)");
+
   // Y axis - Life Expectancy.
   svg.append("g")
+    .attr("class", cssNames.axis)
     .call(d3.axisLeft(yScale)
             .tickSizeOuter(0));
+
+  // Y axis - Label
+  svg.append("text")
+    .attr("class", cssNames.axisLabel)
+    .attr("text-anchor", "middle")
+    .attr("transform", `translate(${paddingAbs.left * -0.5},${innerHeightAbs / 2})rotate(-90)`)
+    .text("Life Expectancy (years)");
 }
 
-function initializeSelection() {
-  svg.selectAll("circle")
+function initializeSelections() {
+  bubbleSelection = svg.selectAll("circle")
     .data(data)
     .enter()
     .append("circle")
@@ -163,7 +173,7 @@ function initialize(dataset, htmlElementId, width = widthRel, height = heightRel
   initializeSvg();
   initializeScales();
   initializeAxis();
-  initializeSelection();
+  initializeSelections();
 }
 
 export {
