@@ -18,15 +18,31 @@ module.exports = function () {
     module: {
       rules: [
         {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+                camelCase: true
+              }
+            },
+            'sass-loader'
+          ]
+        },
+        {
           test: /\.css$/,
           include: /node_modules/,
           use: ['style-loader', 'css-loader']
-        },
+        }
       ]
     },
 
     devServer: {
-      port: 8080,
+      port: 8080
     }
   });
 }

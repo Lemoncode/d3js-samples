@@ -9,7 +9,7 @@ var dataPath = basePath + '/data';
 module.exports = {
   context: path.join(basePath, 'src'),
   resolve: {
-    extensions: ['.js', '.css']
+    extensions: ['.js', '.scss', 'css']
   },
   entry: {
     app: './app.js',

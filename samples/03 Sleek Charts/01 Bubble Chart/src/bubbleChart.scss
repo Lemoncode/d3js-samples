@@ -1,0 +1,23 @@
+.bubble {
+  fill-opacity: 0.7;
+
+  &--africa {
+    fill: rgb(102, 230, 165);
+  }
+
+  &--asia {
+    fill: rgb(128, 177, 235);
+  }
+
+  &--america {
+    fill: rgb(251, 128, 114);
+  }
+
+  &--europe {
+    fill: rgb(231, 41, 138);
+  }
+
+  &--oceania {
+    fill: rgb(231, 138, 195);
+  }
+}

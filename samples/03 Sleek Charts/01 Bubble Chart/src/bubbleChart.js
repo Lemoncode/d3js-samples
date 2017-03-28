@@ -1,4 +1,6 @@
 const d3 = require("d3");
+import cssNames from "./bubbleChart.scss";
+
 
 /**
  * Module local variables.
@@ -14,8 +16,7 @@ let svg = null;
 let xScale = null;
 let yScale = null;
 let bubbleAreaScale = null;
-let bubbleColorScale = null;
-let bubbleColorOpacity = 0.6;
+let bubbleClassScale = null;
 
 // Margins in relative units.
 const marginRel = {
@@ -62,7 +63,6 @@ function initializeSvg() {
     .attr("transform", `translate(${marginAbs.left},${marginAbs.top})`);
 }
 
-
 function initializeScales() {
 
   // x Scale - Represents purchasing power.
@@ -72,7 +72,7 @@ function initializeScales() {
   xScale = d3.scaleLog().base(10).nice()
     .domain(d3.extent(data, (d) => d.purchasingPower))
     .range([0, widthAbs]);
-    
+
 
   // y Scale - Represents life expectancy. Linear.
   yScale = d3.scaleLinear().nice()
@@ -89,15 +89,15 @@ function initializeScales() {
     .domain(d3.extent(data, (d) => d.population))
     .range([1, 100]);
 
-  // Bubble Color Scale - Discrete scale to represent continent.
-  bubbleColorScale = d3.scaleOrdinal()
+  // Bubble Class Scale - Discrete scale to categorize per continent.
+  bubbleClassScale = d3.scaleOrdinal()
     .domain(["Africa", "Asia", "Americas", "Europe", "Oceania"])
     .range([
-      d3.rgb(102, 194, 165),
-      d3.rgb(128, 177, 211),
-      d3.rgb(251, 128, 114),
-      d3.rgb(231, 41, 138),
-      d3.rgb(231, 138, 195)
+      `${cssNames.bubble} ${cssNames.bubbleAfrica}`,
+      `${cssNames.bubble} ${cssNames.bubbleAsia}`,
+      `${cssNames.bubble} ${cssNames.bubbleAmerica}`,
+      `${cssNames.bubble} ${cssNames.bubbleEurope}`,
+      `${cssNames.bubble} ${cssNames.bubbleOceania}`
     ]);
 }
 
@@ -121,8 +121,7 @@ function initializeSelection() {
     .attr("cx", (d) => xScale(d.purchasingPower))
     .attr("cy", (d) => yScale(d.lifeExpectancy))
     .attr("r", (d) => bubbleAreaScale(d.population))
-    .attr("fill", (d) => bubbleColorScale(d.continent))
-    .attr("fill-opacity", bubbleColorOpacity);
+    .attr("class", (d) => bubbleClassScale(d.continent));
 }
 
 /**
