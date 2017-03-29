@@ -2,8 +2,9 @@
   font-family: "Rajdhani";
   font-style: normal;
   font-weight: 400;
-  //src: url('../fonts/rajdhani/Rajdhani-Regular.ttf');
-  src: url('https://fonts.googleapis.com/css?family=Rajdhani');
+  src: url('../fonts/rajdhani/Rajdhani-Regular.ttf');
+  // I wish we could use online URLs for resources to be bundled.
+  //src: url('https://fonts.googleapis.com/css?family=Rajdhani');
 }
 
 .flex-container {
