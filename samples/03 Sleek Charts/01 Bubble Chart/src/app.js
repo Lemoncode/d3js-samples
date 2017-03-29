@@ -6,11 +6,11 @@ function initializeChart() {
   Parser.setup("\t", "\r\n", true);
   Parser.parse("./data.txt",
     (parsedData, htmlTable) => {
-      document.getElementById("dataTable").innerHTML = htmlTable;
-      BubbleChart.initialize(parsedData, "bubbleChart");
+      document.getElementById("id-data-table").innerHTML = htmlTable;
+      BubbleChart.initialize(parsedData, "id-bubble-chart");
     },
     (message) => {
-      document.getElementById("dataTable").innerHTML = message;
+      document.getElementById("id-data-table").innerHTML = message;
     });
 }
 

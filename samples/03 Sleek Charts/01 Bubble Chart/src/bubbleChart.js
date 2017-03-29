@@ -1,5 +1,5 @@
 const d3 = require("d3");
-import cssNames from "./bubbleChart.scss";
+import cssNames from "./bubbleChartStyles.scss";
 
 /**
  * Module local variables.
@@ -19,8 +19,10 @@ let bubbleAreaScale = null;
 let bubbleClassScale = null;
 
 // Width and Height in relative units.
-const widthRel = "80vw";
-const heightRel = "80vh";
+// Fit the container by default unless a specific relative
+// size is indicated from the caller.
+const widthRel = "100%";
+const heightRel = "100%";
 
 // Chart Padding in relative units (%).
 const paddingRel = {

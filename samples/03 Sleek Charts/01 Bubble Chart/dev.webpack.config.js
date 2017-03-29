@@ -19,7 +19,7 @@ module.exports = function () {
       rules: [
         {
           test: /\.scss$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /pageStyles.scss/],
           use: [
             'style-loader',
             {
@@ -32,6 +32,11 @@ module.exports = function () {
             },
             'sass-loader'
           ]
+        },
+        {
+          test: /\.scss$/,
+          include: /pageStyles.scss/,
+          use: ['style-loader', 'css-loader', 'sass-loader']
         },
         {
           test: /\.css$/,

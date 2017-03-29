@@ -19,7 +19,7 @@ module.exports = function () {
       rules: [
         {
           test: /\.scss$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules/, /pageStyles.scss/],
           loader: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
@@ -33,6 +33,16 @@ module.exports = function () {
               },
               { loader: 'sass-loader' }
             ]
+          })
+        },
+        {
+          test: /\.scss$/,
+          include: /pageStyles.scss/,
+          loader: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              { loader: 'css-loader' },
+              { loader: 'sass-loader' } ]
           })
         },
         {
