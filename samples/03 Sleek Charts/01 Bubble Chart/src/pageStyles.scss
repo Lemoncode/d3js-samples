@@ -26,24 +26,25 @@ body {
 
 .bubble-chart {
   width: calc(100vw - 20vmin);
-  height: calc(100vh - 20vmin);
-  margin: 9vmin 10vmin 10vmin;
+  height: calc(100vh - 28vmin);
+  margin: 9vmin 10vmin;
   box-shadow: 0 0 5vmin $softShadow;
   border-radius: $softRadius * 3;
 }
 
 .data-table {
   table {
-    width: 70vw;
-    table-layout: fixed;
+    table-layout: auto;
     border-collapse: collapse;
     text-align: right;
+    white-space: nowrap;
 
     th {
       color: hsla(0, 0%, 90%, 1);
       background-color: hsla(0, 0%, 35%, 1);
       text-align: right;
       padding-right: $softRadius;
+      padding-left: 3vw;
 
       &:first-child {
         border-top-left-radius: $softRadius;

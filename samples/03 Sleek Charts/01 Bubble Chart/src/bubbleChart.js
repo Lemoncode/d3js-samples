@@ -10,6 +10,7 @@ import cssNames from "./bubbleChartStyles.scss";
 let data = null;
 let htmlId = null;
 let svg = null;
+let chart = null;
 let bubbleSelection = null;
 let infoPopup = null;
 
@@ -70,13 +71,13 @@ function addPaddingToScale(scale, marginPercentage) {
  * @private
  */
 
-function initializeSvg() {
+function initializeChart() {
   svg = d3.select(`#${htmlId}`)
     .append("svg")
     .attr("width", widthRel)
     .attr("height", heightRel);
   updateAbsoluteSize();
-  svg = svg.append("g")
+  chart = svg.append("g")
     .attr("transform", `translate(${paddingAbs.left},${paddingAbs.top})`);
 }
 
@@ -120,7 +121,7 @@ function initializeScales() {
 
 function initializeAxis() {
   // X axis - Purchasing Power.
-  svg.append("g")
+  chart.append("g")
     .attr("class", cssNames.axis)
     .attr("transform", `translate(0,${innerHeightAbs})`)
     .call(d3.axisBottom(xScale)
@@ -128,7 +129,7 @@ function initializeAxis() {
       .tickSizeOuter(0));
 
   // Y axis - Life Expectancy.
-  svg.append("g")
+  chart.append("g")
     .attr("class", cssNames.axis)
     .call(d3.axisLeft(yScale)
       .tickSizeOuter(0));
@@ -136,21 +137,21 @@ function initializeAxis() {
 
 function initializeLabels() {
   // X axis - Label
-  svg.append("text")
+  chart.append("text")
     .attr("class", cssNames.axisTitle)
     .attr("text-anchor", "middle")
     .attr("transform", `translate(${innerWidthAbs / 2},${innerHeightAbs + paddingAbs.bottom * 0.7})`)
     .text("Purchasing Power ($US)");
 
   // Y axis - Label
-  svg.append("text")
+  chart.append("text")
     .attr("class", cssNames.axisTitle)
     .attr("text-anchor", "middle")
     .attr("transform", `translate(${paddingAbs.left * -0.5},${innerHeightAbs / 2})rotate(-90)`)
     .text("Life Expectancy (years)");
 
   // Title
-  svg.append("text")
+  chart.append("text")
     .attr("class", cssNames.mainTitle)
     .attr("text-anchor", "middle")
     .attr("transform", `translate(${innerWidthAbs / 2},${paddingAbs.top * -0.3})`)
@@ -158,13 +159,13 @@ function initializeLabels() {
 }
 
 function updatePositionInfoPopup() {
-  infoPopup.style("left", `${d3.event.pageX - parseInt(infoPopup.style("width"), 0) / 2}px`)
-           .style("top", `${d3.event.pageY - parseInt(infoPopup.style("height"), 0) - 5}px`);
+  infoPopup.style("left", `${d3.event.pageX - (infoPopup.node().getBoundingClientRect().width / 2)}px`)
+    .style("top", `${d3.event.pageY - parseInt(infoPopup.style("height"), 0) - 5}px`);
 }
 
 function showInfoPopup(itemData) {
-  infoPopup.html(
-    `<div class="${cssNames.infoPopup}">
+  infoPopup = infoPopup.html(
+    `
     <table>
       <tr>
         <th class="${cssNames.infoPopupCaption}">${itemData.country}</th>
@@ -183,7 +184,7 @@ function showInfoPopup(itemData) {
         <td class="${cssNames.infoPopupUnits}"><small>Inhabitants<small></td>
       </tr>
     </table>
-  </div>`
+  `
   );
   infoPopup.style("opacity", 0.9);
   updatePositionInfoPopup(itemData);
@@ -194,13 +195,15 @@ function hideInfoPopup() {
 }
 
 function initializeInfoPopup() {
-  infoPopup = d3.select(`#${htmlId}`)
-    .append("div")
+  if (!infoPopup) {
+    infoPopup = d3.select(`#${htmlId}`)
+      .append("div")
       .attr("class", cssNames.infoPopup);
+  }
 }
 
 // Very useful to render small bubbles on top of big ones.
-// Emulates z-index in svg canvas.
+// Emulates z-index in chart canvas.
 function sortBubbleSelection() {
   return bubbleSelection.sort((a, b) => {
     return (b.population - a.population);
@@ -208,43 +211,64 @@ function sortBubbleSelection() {
 }
 
 function initializeSelections() {
-  bubbleSelection = svg.selectAll("circle")
-      .data(data)
-      .enter()
+  bubbleSelection = chart.selectAll("circle")
+    .data(data)
+    .enter()
     .append("circle")
-      .attr("cx", (d) => xScale(d.purchasingPower))
-      .attr("cy", (d) => yScale(d.lifeExpectancy))
-      .attr("r", (d) => bubbleAreaScale(d.population))
-      .attr("class", (d) => `${cssNames.bubble} ${continentScale(d.continent)}`)
-      .on("mouseover", showInfoPopup)
-      .on("mousemove", updatePositionInfoPopup)
-      .on("mouseout", hideInfoPopup)
+    .attr("cx", (d) => xScale(d.purchasingPower))
+    .attr("cy", (d) => yScale(d.lifeExpectancy))
+    .attr("r", (d) => bubbleAreaScale(d.population))
+    .attr("class", (d) => `${cssNames.bubble} ${continentScale(d.continent)}`)
+    .on("mouseenter", showInfoPopup)
+    .on("mousemove", updatePositionInfoPopup)
+    .on("mouseleave", hideInfoPopup);
   bubbleSelection = sortBubbleSelection();
 }
 
+function initializeChartElements() {
+  initializeChart();
+  initializeScales();
+  initializeAxis();
+  initializeLabels();
+  initializeInfoPopup();
+  initializeSelections()
+}
+
 /**
- * Initialize Chart
+ * This function launches the chart rendering. 
  * @public
- * @param  {type} dataset            {description}
- * @param  {type} htmlElementId      {description}
- * @param  {type} width = widthRel   {OPTIONAL. Supports relative units.}
- * @param  {type} height = heightRel {OPTIONAL. Supports relative units.}
- * @return {type} {description}
+ * @return {void}
+ */
+function draw() {
+  // TODO: Although effective, this is not very efficient.
+  // It was done to support resizing the quickest way.
+  // There is room for improvement here.
+  if (htmlId) {
+    if (svg) {
+      svg.remove();
+    }
+    initializeChartElements();
+  }
+}
+
+/**
+ * Initialize a new bubble Chart inside the corresponding
+ * html element for a given dataset.
+ * @public
+ * @param  {array} dataset           {Countries stats dataset.}
+ * @param  {type} htmlElementId      {ID of the html element where chart will be drawn.}
+ * @param  {type} width = widthRel   {OPTIONAL. Supports relative units. 100% by default.}
+ * @param  {type} height = heightRel {OPTIONAL. Supports relative units. 100% by default.}
+ * @return {void}
  */
 function initialize(dataset, htmlElementId, width = widthRel, height = heightRel) {
   data = dataset;
   htmlId = htmlElementId;
   widthRel = width;
   heightRel = height;
-
-  initializeSvg();
-  initializeScales();
-  initializeAxis();
-  initializeLabels();
-  initializeInfoPopup();
-  initializeSelections();
 }
 
 export {
-  initialize
+  initialize,
+  draw
 };
