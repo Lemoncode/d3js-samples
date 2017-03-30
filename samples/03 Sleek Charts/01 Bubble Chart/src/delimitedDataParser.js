@@ -50,12 +50,16 @@ function parseData(data, successCallback, failCallback) {
     // Get header items. Those will be our field names.
     const fieldNames = lines.shift().split(delim);
     const numFields = fieldNames.length;
+    const propertyNames = fieldNames.map((fieldName) => {
+      const propertyName = fieldName.replace(/\s+/g, "");
+      return propertyName.charAt(0).toLowerCase() + propertyName.slice(1);
+    });
 
     if (numFields > 0) {
       const parsedData = lines.map((line) => {
         return line.split(delim).reduce((record, currentItem, index) => {
           const number = Number.parseFloat(currentItem);
-          record[fieldNames[index]] = number ? number : currentItem;
+          record[propertyNames[index]] = number ? number : currentItem;
           return record;
         }, {});
       });

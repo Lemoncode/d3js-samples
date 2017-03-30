@@ -1,4 +1,4 @@
-country	population	continent	lifeExpectancy	purchasingPower
+Country	Population	Continent	Life Expectancy	Purchasing Power
 Afghanistan	31889923	Asia	43.8	974.58
 Albania	3600523	Europe	76.4	5937.03
 Algeria	33333216	Africa	72.3	6223.37
