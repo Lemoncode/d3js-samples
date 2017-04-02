@@ -12,6 +12,7 @@ $softRadius: 3px;
 
 body {
   font-family: "Rajdhani";
+  overflow: scroll;
 }
 
 .flex-container {
@@ -27,6 +28,8 @@ body {
 .bubble-chart {
   width: calc(100vw - 20vmin);
   height: calc(100vh - 28vmin);
+  min-width: 640px;
+  min-height: 480px;
   margin: 9vmin 10vmin;
   box-shadow: 0 0 5vmin $softShadow;
   border-radius: $softRadius * 3;

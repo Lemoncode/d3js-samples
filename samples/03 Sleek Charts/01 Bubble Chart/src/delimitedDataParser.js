@@ -34,11 +34,11 @@ function parseDataToHtmlTable(data, fieldNames) {
 }
 
 /**
- * It does the real parsing.
+ * Parse delimited data from string.
  * @private
  * @param  {string} data          {Input data read from url.}
- * @param  {type} successCallback {Callback in case of success.}
- * @param  {type} failCallback    {Callback in case of fail.}
+ * @param  {function} successCallback {Callback in case of success.}
+ * @param  {function} failCallback    {Callback in case of fail.}
  * @return {void}
  */
 function parseData(data, successCallback, failCallback) {
@@ -77,7 +77,7 @@ function parseData(data, successCallback, failCallback) {
 }
 
 /**
- * Parse delimited data using native AJAX request.
+ * Parse delimited data from file using native AJAX request.
  * @public
  * @param  {string} url                {Data input URL to be parsed.}
  * @param  {function} successCallback  {Callback in case of success.}
