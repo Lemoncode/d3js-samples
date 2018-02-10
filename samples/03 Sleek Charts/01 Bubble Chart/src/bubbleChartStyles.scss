@@ -1,0 +1,108 @@
+$softGray: hsl(0, 0%, 20%);
+$softRadius: 3px;
+$africaColor: rgb(102, 230, 165);
+$asiaColor: rgb(128, 177, 235);
+$americaColor: rgb(251, 128, 114);
+$europeColor: rgb(231, 41, 138);
+$oceaniaColor: rgb(231, 138, 195);
+
+@mixin continentFiller($color) {
+  fill: $color;
+  background-color: $color;
+}
+
+.continent {
+  &--africa {
+    @include continentFiller($africaColor);
+  }
+
+  &--asia {
+    @include continentFiller($asiaColor);
+  }
+
+  &--america {
+    @include continentFiller($americaColor);
+  }
+
+  &--europe {
+    @include continentFiller($europeColor);
+  }
+
+  &--oceania {
+    @include continentFiller($oceaniaColor);
+  }
+}
+
+svg {
+  font-family: inherit;
+}
+
+.bubble {
+  fill-opacity: 0.7;
+  stroke-opacity: 0;
+  transition-property: stroke-opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+
+  &:hover {
+    stroke: $softGray;
+    stroke-opacity: 0.5;
+  }
+}
+
+.axis {
+  font-family: inherit;
+
+  text {
+    fill: $softGray;
+    fill-opacity: 0.8;
+    font-size: 0.8rem;
+  }
+
+  path,
+  line {
+    stroke: $softGray;
+    stroke-opacity: 0.3;
+  }
+
+  &_title {
+    font-size: 1.2rem;
+    fill: $softGray;
+  }
+}
+
+.main-title {
+  font-size: 1.6rem;
+  fill: $softGray;
+}
+
+.info-popup {
+  position: absolute;
+  pointer-events: none;
+  color: white;
+  background-color: $softGray;
+  border-radius: $softRadius;
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+  font-size: 0.8rem;
+  table-layout: auto;
+  white-space: nowrap;
+
+  &_data {
+    text-align: right;
+    font-weight: bold;
+  }
+
+  &_units {
+    text-align: left;
+  }
+
+  &_caption {
+    font-size: 1rem;
+  }
+
+  &_subcaption {
+    border-radius: $softRadius;
+  }
+}
