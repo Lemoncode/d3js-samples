@@ -1,28 +1,36 @@
-nv.addGraph(function() {
-  var chart = nv.models.scatterChart()
-                .showDistX(true)    //showDist, when true, will display those little distribution lines on the axis.
-                .showDistY(true)
-                .transitionDuration(350)
-                .color(d3.scale.category10().range());
-
-  //Configure how the tooltip looks.
-  chart.tooltipContent(function(key) {
-      return '<h3>' + key + '</h3>';
+    // register our custom symbols to nvd3
+    // make sure your path is valid given any size because size scales if the chart scales.
+    nv.utils.symbolMap.set('thin-x', function(size) {
+      size = Math.sqrt(size);
+      return 'M' + (-size/2) + ',' + (-size/2) +
+              'l' + size + ',' + size +
+              'm0,' + -(size) +
+              'l' + (-size) + ',' + size;
   });
 
-  //Axis settings
-  chart.xAxis.tickFormat(d3.format('.02f'));
-  chart.yAxis.tickFormat(d3.format('.02f'));
+  // create the chart
+  var chart;
+  nv.addGraph(function() {
+      chart = nv.models.scatterChart()
+          .showDistX(true)
+          .showDistY(true)
+          .useVoronoi(true)
+          .color(d3.scale.category10().range())
+          .duration(300)
+      ;
+      chart.dispatch.on('renderEnd', function(){
+          console.log('render complete');
+      });
 
-  //We want to show shapes other than circles.
-  chart.scatter.onlyCircles(false);
+      chart.xAxis.tickFormat(d3.format('.02f'));
+      chart.yAxis.tickFormat(d3.format('.02f'));
 
-  var myData = randomData(4,40);
-  d3.select('#chart svg')
-      .datum(myData)
-      .call(chart);
+      d3.select('#test1 svg')
+          .datum(randomData(4,40))
+          .call(chart);
 
-  nv.utils.windowResize(chart.update);
+      nv.utils.windowResize(chart.update);
 
-  return chart;
-});
+      chart.dispatch.on('stateChange', function(e) { ('New State:', JSON.stringify(e)); });
+      return chart;
+  });

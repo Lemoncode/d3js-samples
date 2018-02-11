@@ -1,25 +1,23 @@
-/**************************************
- * Simple test data generator
- */
 function randomData(groups, points) { //# groups,# points per group
+  // smiley and thin-x are our custom symbols!
   var data = [],
-      shapes = ['circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
+      shapes = ['thin-x', 'circle', 'cross', 'triangle-up', 'triangle-down', 'diamond', 'square'],
       random = d3.random.normal();
 
   for (i = 0; i < groups; i++) {
-    data.push({
-      key: 'Group ' + i,
-      values: []
-    });
-
-    for (j = 0; j < points; j++) {
-      data[i].values.push({
-        x: random()
-      , y: random()
-      , size: Math.random()   //Configure the size of each scatter point
-      , shape: (Math.random() > 0.95) ? shapes[j % 6] : "circle"  //Configure the shape of each scatter point.
+      data.push({
+          key: 'Group ' + i,
+          values: []
       });
-    }
+
+      for (j = 0; j < points; j++) {
+          data[i].values.push({
+              x: random(),
+              y: random(),
+              size: Math.round(Math.random() * 100) / 100,
+              shape: shapes[j % shapes.length]
+          });
+      }
   }
 
   return data;
