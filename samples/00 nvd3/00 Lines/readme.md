@@ -220,9 +220,72 @@ Instantiate the chart
 
 > Excercise now is time to play with real data
 
-http://api.population.io/
+#Excercise
+
+Let's check population data from this site:
+
+https://datahub.io/core/population#resource-population
+
+We can download the json source (Data Files >> download json (1MB))
+
+## Tips
+
+Let's substitute serie by serie, some tips to progress with this excercise (just only read them if you get stucked):
+
+### Obtaining data
+
+- About obtaining the json source:
+  - Download it form this url: https://pkgstore.datahub.io/core/population/population_json/data/43d34c2353cbd16a0aa8cadfb193af05/population_json.json
+  - The easiest way to access it for this sampe: copy it and paste it in a file named _country-data.js_ and assign it to a variable
 
 
+_./country-data.js_
 
+```javascript
+var countryData = [{ "Country Code": "ARB", "Country Name": "Arab World", "Value": 92490932.0, "Year": 1960 }, { "Country C...
+```
 
+  - Then do not forget to reference it in your HTML file:
+
+  _./index.html_
+
+```diff
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.5/nv.d3.js"></script>
++    <script src="./country-data.js"></script>
+    <script src="./data.js"></script>
+    <script src="./main.js"></script>    
+```
+
+### Transforming data
+
+You will need to filter by country, e.g. to filter by spain
+
+```javascript
+  var spain = countryData
+            .filter(data => data["Country Code"] == "ESP")
+```
+You will need to transform the data from the current structure to a pair [X,Y]
+
+```javascript
+  var spain = countryData
+            .filter(data => data["Country Code"] == "ESP")
+            .map(data => ({x: data.Year, y: data.Value}))
+            ;
+```
+
+Now you are ready to start loading the rest of series and substitue what is in the return in the _data.js_ file.
+
+The next step is to customize the X axis and Y axis, you only need to update _main.js_
+
+The final step, the Y chart looks a bit cluttered, let's divided the value by 1000000 and add a "M" to each label
+
+```javascript
+chart.yAxis
+.axisLabel('Population')
+.tickFormat(function(d) {
+    const formatted = Math.trunc(d/1000000) + "M";
+    return formatted;
+})         
+```
 
