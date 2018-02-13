@@ -18,9 +18,6 @@
           .color(d3.scale.category10().range())
           .duration(300)
       ;
-      chart.dispatch.on('renderEnd', function(){
-          console.log('render complete');
-      });
 
       chart.xAxis.tickFormat(d3.format('.02f'));
       chart.yAxis.tickFormat(d3.format('.02f'));
@@ -30,7 +27,8 @@
           .call(chart);
 
       nv.utils.windowResize(chart.update);
-
-      chart.dispatch.on('stateChange', function(e) { ('New State:', JSON.stringify(e)); });
+      
       return chart;
   });
+
+  
