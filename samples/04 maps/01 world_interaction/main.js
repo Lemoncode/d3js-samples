@@ -29,58 +29,60 @@ var projection = d3.geoMercator()
   .scale(130)
   .translate([width / 2, height / 1.5]);
 
-  var path = d3.geoPath().projection(projection);
+var path = d3.geoPath().projection(projection);
 
-  svg.call(tip);
+svg.call(tip);
 
-  // World_countries extracted from: https://raw.githubusercontent.com/jdamiani27/Data-Visualization-and-D3/master/lesson4/world_countries.json
-  queue()
+// World_countries extracted from: https://raw.githubusercontent.com/jdamiani27/Data-Visualization-and-D3/master/lesson4/world_countries.json
+queue()
   .defer(d3.json, "world_countries.json")
   .defer(d3.tsv, "world_population.tsv")
   .await(ready);
 
-  function ready(error, data, population) {
-    var populationById = {};
-  
-    population.forEach(function(d) { populationById[d.id] = +d.population; });
-    data.features.forEach(function(d) { d.population = populationById[d.id] });
-  
-    svg.append("g")
-        .attr("class", "countries")
-      .selectAll("path")
-        .data(data.features)
-      .enter().append("path")
-        .attr("d", path)
-        .style("fill", function(d) { return color(populationById[d.id]); })
-        .style('stroke', 'white')
-        .style('stroke-width', 1.5)
-        .style("opacity",0.8)
-        // tooltips
-          .style("stroke","white")
-          .style('stroke-width', 0.3)
-          .on('mouseover',function(d){
-            tip.show(d);
-  
-            d3.select(this)
-              .style("opacity", 1)
-              .style("stroke","white")
-              .style("stroke-width",3);
-          })
-          .on('mouseout', function(d){
-            tip.hide(d);
-  
-            d3.select(this)
-              .style("opacity", 0.8)
-              .style("stroke","white")
-              .style("stroke-width",0.3);
-          });
-  
+function ready(error, data, population) {
+  var populationById = {};
+
+  population.forEach(function (d) { populationById[d.id] = +d.population; });
+  data.features.forEach(function (d) { d.population = populationById[d.id] });
+
+  svg.append("g")
+    .attr("class", "countries")
+    .selectAll("path")
+    .data(data.features)
+    .enter().append("path")
+    .attr("d", path)
+    .style("fill", function (d) { return color(populationById[d.id]); })
+    .style('stroke', 'white')
+    .style('stroke-width', 1.5)
+    .style("opacity", 0.8)
+    // tooltips
+    .style("stroke", "white")
+    .style('stroke-width', 0.3)
+    .on('mouseover', function (d) {
+      tip.show(d);
+
+      d3.select(this)
+        .style("opacity", 1)
+        .style("stroke", "white")
+        .style("stroke-width", 3);
+    })
+    .on('mouseout', function (d) {
+      tip.hide(d);
+
+      d3.select(this)
+        .style("opacity", 0.8)
+        .style("stroke", "white")
+        .style("stroke-width", 0.3);
+    });
+
+  /*
     svg.append("path")
-        .datum(topojson.mesh(data.features, function(a, b) { return a.id !== b.id; }))
-         // .datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
-        .attr("class", "names")
-        .attr("d", path);
-  }
+    .datum(topojson.mesh(data.features, function (a, b) { return a.id !== b.id; }))
+
+    .attr("class", "names")
+    .attr("d", path);
+  */
+}
 
 
 
