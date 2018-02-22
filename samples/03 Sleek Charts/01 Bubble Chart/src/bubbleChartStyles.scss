@@ -47,6 +47,7 @@ svg {
   &:hover {
     stroke: $softGray;
     stroke-opacity: 0.5;
+    cursor: help;
   }
 }
 
@@ -82,7 +83,7 @@ svg {
   color: white;
   background-color: $softGray;
   border-radius: $softRadius;
-  transition-property: opacity;
+  transition-property: opacity, left, top;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   font-size: 0.8rem;

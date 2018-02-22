@@ -26,13 +26,16 @@ let continentScale = null;
 const widthRel = "100%";
 const heightRel = "100%";
 
-// Chart Padding in relative units (%).
+// Chart Padding in relative units (rem).
+// Given that padding is intended to allocate axis labels, it makes
+// sense that it is expressed in relative units refering to font size.
 const paddingRel = {
-  top: 12,
-  right: 6,
-  bottom: 12,
-  left: 12
+  top: 4,
+  right: 1,
+  bottom: 4,
+  left: 4
 };
+let fontSizeAbs = null;
 
 // Padding in absolute units.
 let paddingAbs = {};
@@ -49,11 +52,12 @@ let innerHeightAbs = null;
 function updateAbsoluteSize() {
   const widthAbs = parseInt(svg.style("width"), 10);
   const heightAbs = parseInt(svg.style("height"), 10);
-  const referenceAbs = Math.min(widthAbs, heightAbs) / 100;
-  paddingAbs.top = Math.round(paddingRel.top * referenceAbs);
-  paddingAbs.right = Math.round(paddingRel.right * referenceAbs);
-  paddingAbs.bottom = Math.round(paddingRel.bottom * referenceAbs);
-  paddingAbs.left = Math.round(paddingRel.left * referenceAbs);
+  // const displayScalingFactor = window.devicePixelRatio;
+  fontSizeAbs = parseInt(getComputedStyle(document.body).fontSize, 10);
+  paddingAbs.top = Math.round(paddingRel.top * fontSizeAbs);
+  paddingAbs.right = Math.round(paddingRel.right * fontSizeAbs);
+  paddingAbs.bottom = Math.round(paddingRel.bottom * fontSizeAbs);
+  paddingAbs.left = Math.round(paddingRel.left * fontSizeAbs);
   innerWidthAbs = widthAbs - paddingAbs.left - paddingAbs.right;
   innerHeightAbs = heightAbs - paddingAbs.top - paddingAbs.bottom;
 }
@@ -125,7 +129,7 @@ function initializeAxis() {
     .attr("class", cssNames.axis)
     .attr("transform", `translate(0,${innerHeightAbs})`)
     .call(d3.axisBottom(xScale)
-      .ticks(12, "$.2s")
+      .ticks(Math.max(innerWidthAbs / (fontSizeAbs * 5), 2), "$.2s")
       .tickSizeOuter(0));
 
   // Y axis - Life Expectancy.
@@ -159,7 +163,8 @@ function initializeLabels() {
 }
 
 function updatePositionInfoPopup() {
-  infoPopup.style("left", `${d3.event.pageX - (infoPopup.node().getBoundingClientRect().width / 2)}px`)
+  infoPopup
+    .style("left", `${d3.event.pageX - (infoPopup.node().getBoundingClientRect().width / 2)}px`)
     .style("top", `${d3.event.pageY - parseInt(infoPopup.style("height"), 0) - 5}px`);
 }
 
@@ -185,9 +190,9 @@ function showInfoPopup(itemData) {
       </tr>
     </table>
   `
-  );
+  );  
+  updatePositionInfoPopup();
   infoPopup.style("opacity", 0.9);
-  updatePositionInfoPopup(itemData);
 }
 
 function hideInfoPopup() {

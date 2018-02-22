@@ -1,9 +1,8 @@
 import * as Parser from "./delimitedDataParser";
 import * as BubbleChart from "./bubbleChart";
 
-
 function initializeChart() {
-  Parser.setup("\t", "\r\n", true);
+  Parser.setup("\t", "\n", true);
   Parser.parse("./data.txt",
     (parsedData, htmlTable) => {
       document.getElementById("id-data-table").innerHTML = 
@@ -12,6 +11,7 @@ function initializeChart() {
       BubbleChart.initialize(parsedData, "id-bubble-chart");
       BubbleChart.draw();
       window.addEventListener("resize", BubbleChart.draw);
+      window.addEventListener("orientationchange", BubbleChart.draw);
     },
     (message) => {
       document.getElementById("id-data-table").innerHTML = message;
