@@ -37,22 +37,22 @@ var path = d3.geoPath().projection(projection);
 svg.call(tip);
 
 // World_countries extracted from: https://raw.githubusercontent.com/jdamiani27/Data-Visualization-and-D3/master/lesson4/world_countries.json
-/*queue()
+queue()
   .defer(d3.json, "world_countries.json")
   .defer(d3.tsv, "world_population.tsv")
-  .await(ready);*/
+  .await(ready);
 
 //Arreglar promesas no va
-Promise.all([
+/*Promise.all([
   fetch("world_countries.json"),
   fetch("world_population.tsv")
 ]).then(responses=>{
   ready(responses[0].features,responses[1]);
 }).catch((error)=>{
   throw error;
-});
+});*/
 
-function ready(data, population) {
+function ready(error,data, population) {
   var populationById = {};
 
   population.forEach((d) =>{ populationById[d.id] = +d.population; });

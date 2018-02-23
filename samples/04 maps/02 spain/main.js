@@ -73,7 +73,7 @@ keys
   .style("border-top-color", String)
   .text( d => color.invertExtent(d)[0]);
 
-
+/*
 Promise.all([
   fetch("municipios.json"),
   fetch("ccaa.json")
@@ -81,9 +81,9 @@ Promise.all([
   ready(responses[0],responses[1]);
 }).catch((error)=>{
   throw error;
-});
+});*/
 
-
+/*
 function ready (d,ccaa){
   topojson.presimplify(d);
   topojson.presimplify(ccaa);
@@ -199,11 +199,124 @@ function ready (d,ccaa){
     ]
   });
   map.init();
-}
+}*/
 
-/*
+
 d3.json("municipios.json", function (error, d) {
   d3.json("ccaa.json", function (error, ccaa) {
-    
+     topojson.presimplify(d);
+  topojson.presimplify(ccaa);
+  var map = new ZoomableCanvasMap({
+    element: "body",
+    zoomScale: 0.8,
+    width: width,
+    height: height,
+    projection: d3.geo
+      .conicConformalSpain()
+      .translate([width / 2 + 300, height / 2 + 100])
+      .scale(960 * 4.3),
+    data: [
+      {
+        features: topojson.feature(d, d.objects["municipios"]),
+        static: {
+          paintfeature: (parameters, d) => {
+            parameters.context.fillStyle = color(d.properties.rate);
+            parameters.context.fill();
+          },
+          postpaint: parameters => {
+            var p = new Path2D(parameters.projection.getCompositionBorders());
+            parameters.context.lineWidth = 0.5;
+            parameters.context.strokeStyle = "#555";
+            parameters.context.stroke(p);
+          }
+        },
+        dynamic: {
+          postpaint: parameters=> {
+            if (!hover) {
+              tooltip.style("opacity", 0);
+              return;
+            }
+            parameters.context.beginPath();
+            parameters.context.lineWidth = 1.5 / parameters.scale;
+            parameters.path(hover);
+            parameters.context.stroke();
+            tooltip
+              .style("opacity", 1)
+              .html(
+              `<div class='g-place'>
+                <span class='g-headline'>
+                  ${hover.properties.name}
+                </span> 
+              </div>
+              <span>Density</span>
+              <span class='g-value'>
+                ${format(hover.properties.rate)} per km2
+              </span>`
+              );
+          }
+        },
+        events: {
+          hover:  (parameters, d)=> {
+            hover = d;
+            parameters.map.paint();
+          }
+        }
+      },
+      {
+        features: topojson.feature(ccaa, ccaa.objects["ccaa"]),
+        static: {
+          paintfeature: (parameters, d) => {
+            parameters.context.lineWidth = 0.5 / parameters.scale;
+            parameters.context.strokeStyle = "rgb(130,130,130)";
+            parameters.context.stroke();
+          },
+          postpaint: parameters =>{
+            cities.forEach( city=>{
+              
+              // Project the coordinates into our Canvas map
+              var projectedPoint = parameters.projection(city.coordinates);
+              // Create the label dot
+              parameters.context.beginPath();
+              parameters.context.arc(
+                projectedPoint[0],
+                projectedPoint[1],
+                2 / parameters.scale,
+                0,
+                2 * Math.PI,
+                true
+              );
+              // Font properties
+              parameters.context.textAlign = "center";
+              parameters.context.font=`${11/parameters.scale}px sans-serif`;
+              // Create the text shadow
+              parameters.context.shadowColor = "black";
+              parameters.context.shadowBlur = 5;
+              parameters.context.lineWidth = 1 / parameters.scale;
+              parameters.context.strokeText(
+                city.name,
+                projectedPoint[0],
+                projectedPoint[1] - 7 / parameters.scale
+              );
+              // Paint the labels
+              parameters.context.fillStyle = "white";
+              parameters.context.fillText(
+                city.name,
+                projectedPoint[0],
+                projectedPoint[1] - 7 / parameters.scale
+              );
+              parameters.context.fill();           
+            });
+        
+          }
+        },
+        events: {
+          click:  (parameters, d) =>{
+            parameters.map.zoom(d);
+          }
+        }
+      }
+    ]
   });
-});*/
+  map.init();
+  });
+});
