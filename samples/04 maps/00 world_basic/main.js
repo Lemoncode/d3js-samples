@@ -17,7 +17,4 @@ var projection = d3.geoMercator()
 // read geojson file from a remote url  
 // if we use topojson file use to take 80% less space
   var url = "http://enjalot.github.io/wwsd/data/world/world-110m.geojson";
-  d3.json(url, function(err, geojson) {
-    svg.append("path")
-      .attr("d", path(geojson));
-  });
+  d3.json(url,(err,geojson) =>{svg.append("path").attr("d",path(geojson));});
