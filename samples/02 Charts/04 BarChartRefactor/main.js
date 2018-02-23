@@ -40,11 +40,8 @@ function appendSvg(domElement) {
 // pixels
 // in this case we map the canvas range 0..350, to 0...maxSales
 // domain == data (data from 0 to maxSales) boundaries
-function setupXScale()
-{
-  var maxSales = d3.max(totalSales, function(d, i) {
-    return d.sales;
-  });
+function setupXScale(){
+  var maxSales = d3.max(totalSales, (d, _)=> d.sales);
 
   x = d3.scaleLinear()
     .range([0, width])
@@ -59,9 +56,7 @@ function setupYScale()
 {
   y = d3.scaleBand()
     .rangeRound([0, height])
-    .domain(totalSales.map(function(d, i) {
-      return d.product;
-    }));
+    .domain(totalSales.map((d, _)=>d.product));
 }
 
 function appendXAxis() {
@@ -98,11 +93,7 @@ function appendChartBars()
     //           get the right value
     newRects.append('rect')
       .attr('x', x(0))
-      .attr('y', function(d, i) {
-        return y(d.product);
-      })
+      .attr('y', (d, _)=>y(d.product))
       .attr('height', y.bandwidth)
-      .attr('width', function(d, i) {
-        return x(d.sales);
-      });
+      .attr('width', (d, _)=>x(d.sales));
 }

@@ -15,8 +15,8 @@ var svg = d3.select("body").append("svg")
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-            ;
+            `translate(${margin.left},${margin.top})`);
+            
 
 var barChartsGroup = svg.append("g");
 
@@ -32,9 +32,7 @@ var rects = barChartsGroup.selectAll('rect')
 // on the bar chart, we need to know the max sales value we are going
 // to show.
 
-var maxSales = d3.max(totalSales, function(d, i) {
-  return d.sales;
-});
+var maxSales = d3.max(totalSales, (d, _)=>d.sales);
 
 // Now on the X axis we want to map totalSales values to
 // pixels
@@ -51,9 +49,7 @@ var x = d3.scaleLinear()
 // ** Tip: let's play with [0, 75] values
 var y = d3.scaleBand()
   .rangeRound([0, height])
-  .domain(totalSales.map(function(d, i) {
-    return d.product;
-  }));
+  .domain(totalSales.map((d, _)=>d.product));
 
 
 
@@ -71,17 +67,13 @@ var newRects = rects.enter();
 //           get the right value
 newRects.append('rect')
   .attr('x', x(0))
-  .attr('y', function(d, i) {
-    return y(d.product);
-  })
+  .attr('y', (d, _) =>y(d.product))
   .attr('height', y.bandwidth)
-  .attr('width', function(d, i) {
-    return x(d.sales);
-  });
+  .attr('width', (d, _)=>x(d.sales));
 
   // Add the X Axis
   svg.append("g")
-    .attr("transform", "translate(0,"+ height +")")
+    .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x));
 
   // Add the Y Axis

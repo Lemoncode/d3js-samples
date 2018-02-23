@@ -42,7 +42,7 @@ function appendPieChart()
 {
   // Where to get the measure data
   var pie = d3.pie()
-    .value(function(d) { return d.sales })
+    .value( d => d.sales );
 
   // Calculate Arcs
   var slices = pie(totalSales);
@@ -59,11 +59,8 @@ function appendPieChart()
         .append('path')
           .attr('class', 'slice')
           .attr('d', arc)
-          .attr('fill', function(d) {
-            return color(d.data.product);
-          })
-          .attr("transform", `translate(150, 50)`)
-          ;
+          .attr('fill', d => color(d.data.product))
+          .attr("transform", `translate(150, 50)`);
 }
 
 function AppendLegend() {
@@ -76,7 +73,7 @@ function AppendLegend() {
       .data(totalSales)
         .enter()
           .append('text')
-            .text(function(d) { return '• ' + d.product; })
-            .attr('fill', function(d) { return color(d.product); })
-            .attr('y', function(d, i) { return 20 * (i + 1); })  
+            .text( d => `• ${d.product}`)
+            .attr('fill', d => color(d.product))
+            .attr('y', (d, _) => 20 * (i + 1) ); 
 }
