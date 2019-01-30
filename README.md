@@ -1,6 +1,12 @@
 # d3js-samples
 
-Simple d3js (v. 4) samples, plus challenges (including solutions), based on the great d3js online tutorial: https://square.github.io/intro-to-d3/
+Simple d3js (v. 4) samples:
+  - Basic HTML / CSS sample (intro to developers that are NOOB to web development).
+  - Basic d3js charts samples:
+     - Consuming third partie libraries.
+     - Creating barchart from scratch.
+     - Creating a pie chart.
+  - Working with maps (guide included).
 
 # About Lemoncode
 
