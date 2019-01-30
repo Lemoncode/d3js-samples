@@ -130,7 +130,7 @@ newRects.append('rect')
   });
 ```
 
-> Excercise: Let's try to this dynamic, we dont' want to stick to a given resolution, steps:
+> **Excercise**: Let's try to this dynamic, we dont' want to stick to a given resolution, steps:
 
 1. Create a function where you determine the size of the canvas as parameters.
 2. Get the SVG widht and height and maximize size.
@@ -147,7 +147,7 @@ function drawBarchChart(width, height) {
 
 ```javascript
 var svg = d3.select('svg');
-drawBarchChart(svg._groups[0][0].clientWidth, svg._groups[0][0].clientHeight);
+drawBarcChart(svg._groups[0][0].clientWidth, svg._groups[0][0].clientHeight);
 ```
 
 
