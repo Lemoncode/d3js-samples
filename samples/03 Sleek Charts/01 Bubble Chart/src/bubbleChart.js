@@ -236,7 +236,7 @@ function initializeChartElements() {
   initializeAxis();
   initializeLabels();
   initializeInfoPopup();
-  initializeSelections()
+  initializeSelections();
 }
 
 /**

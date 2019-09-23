@@ -18,20 +18,18 @@ refreshChart();
 autoRefreshChart(5000);
 
 function autoRefreshChart(miliSeconds) {
-  setInterval(function() {
-    refreshChart();
-  }, miliSeconds);
+  setInterval(()=> refreshChart(), miliSeconds);
 }
 
 
 function refreshChart() {
-  d3.csv("data.csv", function(error, data) {  
+  d3.csv("data.csv", (error, data) =>{  
     if (error) throw error;
 
     // parse the date / time
     var parseTime = d3.timeParse("%d-%b-%y");    
 
-    data.forEach(function(d) {
+    data.forEach( d => {
           d.month = parseTime(d.month);
           d.sales = +d.sales;
       });
@@ -81,7 +79,7 @@ function setupXScale(totalSales)
 
   x = d3.scaleTime()
       .range([0, width])
-      .domain(d3.extent(totalSales, function(d) { return d.month}));
+      .domain(d3.extent(totalSales, d => d.month));
 }
 
 // Now we don't have a linear range of values, we have a discrete
@@ -89,9 +87,7 @@ function setupXScale(totalSales)
 // Here we are generating an array of product names
 function setupYScale(totalSales)
 {
-  var maxSales = d3.max(totalSales, function(d, i) {
-    return d.sales;
-  });
+  var maxSales = d3.max(totalSales, (d, _)=>d.sales);
 
   y = d3.scaleLinear()
         .range([height, 0])
@@ -116,8 +112,8 @@ function appendLineCharts(totalSales)
 {
   // define the line
   var valueline = d3.line()
-                    .x(function(d) { return x(d.month); })
-                    .y(function(d) { return y(d.sales); });
+                    .x(d => x(d.month) )
+                    .y(d => y(d.sales) );
 
   // Add the valueline path.
   svg.append("path")

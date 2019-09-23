@@ -4,9 +4,12 @@ var format = d3.format(",");
 var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
-  .html(function (d) {
-    return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>" + "<strong>Population: </strong><span class='details'>" + format(d.population) + "</span>";
-  })
+  .html( d =>
+    `<strong>Country: </strong>
+     <span class='details'>${d.properties.name}<br></span>
+     <strong>Population: </strong>
+     <span class='details'>${format(d.population)}</span>`
+  );
 
 var margin = { top: 0, right: 0, bottom: 0, left: 0 },
   width = 960 - margin.left - margin.right,
@@ -39,11 +42,21 @@ queue()
   .defer(d3.tsv, "world_population.tsv")
   .await(ready);
 
-function ready(error, data, population) {
+//Arreglar promesas no va
+/*Promise.all([
+  fetch("world_countries.json"),
+  fetch("world_population.tsv")
+]).then(responses=>{
+  ready(responses[0].features,responses[1]);
+}).catch((error)=>{
+  throw error;
+});*/
+
+function ready(error,data, population) {
   var populationById = {};
 
-  population.forEach(function (d) { populationById[d.id] = +d.population; });
-  data.features.forEach(function (d) { d.population = populationById[d.id] });
+  population.forEach((d) =>{ populationById[d.id] = +d.population; });
+  data.features.forEach((d)=> { d.population = populationById[d.id]; });
 
   svg.append("g")
     .attr("class", "countries")
@@ -51,14 +64,14 @@ function ready(error, data, population) {
     .data(data.features)
     .enter().append("path")
     .attr("d", path)
-    .style("fill", function (d) { return color(populationById[d.id]); })
+    .style("fill", d => color(populationById[d.id]))
     .style('stroke', 'white')
     .style('stroke-width', 1.5)
     .style("opacity", 0.8)
     // tooltips
     .style("stroke", "white")
     .style('stroke-width', 0.3)
-    .on('mouseover', function (d) {
+    .on('mouseover',  d => {
       tip.show(d);
 
       d3.select(this)
@@ -66,7 +79,7 @@ function ready(error, data, population) {
         .style("stroke", "white")
         .style("stroke-width", 3);
     })
-    .on('mouseout', function (d) {
+    .on('mouseout', d => {
       tip.hide(d);
 
       d3.select(this)
@@ -74,14 +87,6 @@ function ready(error, data, population) {
         .style("stroke", "white")
         .style("stroke-width", 0.3);
     });
-
-  /*
-    svg.append("path")
-    .datum(topojson.mesh(data.features, function (a, b) { return a.id !== b.id; }))
-
-    .attr("class", "names")
-    .attr("d", path);
-  */
 }
 
 

@@ -18,9 +18,7 @@ var rects = svg.selectAll('rect')
 // on the bar chart, we need to know the max sales value we are going
 // to show.
 
-var maxSales = d3.max(totalSales, function(d, i) {
-  return d.sales;
-});
+var maxSales = d3.max(totalSales,(d, _)=> d.sales);
 
 // Now on the X axis we want to map totalSales values to
 // pixels
@@ -37,9 +35,7 @@ var x = d3.scaleLinear()
 // ** Tip: let's play with [0, 75] values
 var y = d3.scaleBand()
   .rangeRound([0, 75])
-  .domain(totalSales.map(function(d, i) {
-    return d.product;
-  }));
+  .domain(totalSales.map((d, _)=> d.product));
 
 // Now it's time to append to the list of Rectangles we already have
 var newRects = rects.enter();
@@ -55,10 +51,6 @@ var newRects = rects.enter();
 //           get the right value
 newRects.append('rect')
   .attr('x', x(0))
-  .attr('y', function(d, i) {
-    return y(d.product);
-  })
+  .attr('y', (d, _) =>y(d.product))
   .attr('height', y.bandwidth)
-  .attr('width', function(d, i) {
-    return x(d.sales);
-  });
+  .attr('width', (d, _)=> x(d.sales));
